@@ -20,7 +20,7 @@ function Wallpaper(props){
   };
 
     
-    let URL = "http://localhost:4000/api/get-location-by-city?city="+city; //dynamic
+    let URL = "https://zomatoclone42.herokuapp.com/api/get-location-by-city?city="+city; //dynamic
     try{
     let response = await  axios.get(URL);
     let {location} = response.data;
@@ -46,7 +46,7 @@ function Wallpaper(props){
       setRestaurantList([]);
     return false;
   };    
-    let URL = `http://localhost:4000/api/get-restaurant-by-location-id?lid=${selectLoc.location_id}&rest=${restaurant}`; //dynamic
+    let URL = `https://zomatoclone42.herokuapp.com/api/get-restaurant-by-location-id?lid=${selectLoc.location_id}&rest=${restaurant}`; //dynamic
     try{
     let response = await  axios.get(URL);
     let{result}=response.data;  

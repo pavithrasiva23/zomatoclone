@@ -16,7 +16,7 @@ function SearchPage(){
   let [pageCount,setPageCount] = useState(0);
   let getFilterDetails = async(_filter)=>{
     _filter = {..._filter};
-    let URL="http://localhost:4000/api/filter";
+    let URL="https://zomatoclone42.herokuapp.com/api/filter";
     // filter
     
     if(searchParams.get("meal_type"))
@@ -33,7 +33,7 @@ function SearchPage(){
   };
 
   let getLocationList = async ()=>{
-    let URL="http://localhost:4000/api/get-location";
+    let URL="https://zomatoclone42.herokuapp.com/api/get-location";
         
     try{
       let response =await axios.get(URL);

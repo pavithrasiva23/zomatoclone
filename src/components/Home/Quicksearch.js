@@ -5,7 +5,7 @@ import QuickSearchItem from './QuickSearchItem';
 function QuickSearch(){
   let [mealType,setMealTYpe] = useState([])
 let getQuickSearchData= async () =>{
-  let URL='http://localhost:4000/api/get-meal-types'; 
+  let URL='https://zomatoclone42.herokuapp.com/api/get-meal-types'; 
   try{
     let response = await axios.get(URL);
     let {status,meal_type} = response.data;
