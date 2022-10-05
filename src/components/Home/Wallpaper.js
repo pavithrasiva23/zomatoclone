@@ -1,0 +1,144 @@
+import React, {useRef,useState} from 'react';
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import Header from "../Header";
+function Wallpaper(props){
+ 
+  let navigate = useNavigate();
+  let locationRef = useRef(); //only refernce
+  let [locList,setLocList] = useState([]);  
+  let [restaurantList,setRestaurantList] = useState([]);
+  let [selectLoc,setSelectLoc] = useState(null);
+  let [restDisable,setRestDisabled] = useState(false);
+    let getLocationList = async (event) =>{
+    let city = event.target.value;
+    setSelectLoc(null);//default it is null no words so it is null-( typing is not set so using null over here )
+    setRestDisabled(true);
+    if(city=== "" || city.length<2) {
+      setLocList([]);
+    return false;
+  };
+
+    
+    let URL = "http://localhost:4000/api/get-location-by-city?city="+city; //dynamic
+    try{
+    let response = await  axios.get(URL);
+    let {location} = response.data;
+    setLocList([...location]);
+    } 
+    catch(error){
+      alert(error);
+      console.log("error");
+    }
+    
+  };
+  let selectLocation = (location) => {
+    location = JSON.parse (location);  
+    locationRef.current.value = `${location.name}, ${location.city}`; 
+    setSelectLoc ({...location});
+    setRestDisabled(false);
+    setLocList([]);
+     };
+
+  let getRestaurantDetails = async(event) => {
+    let restaurant = event.target.value;// call value - after typing get input from input box
+      if(restaurant=== "" || restaurant.length<2) {
+      setRestaurantList([]);
+    return false;
+  };    
+    let URL = `http://localhost:4000/api/get-restaurant-by-location-id?lid=${selectLoc.location_id}&rest=${restaurant}`; //dynamic
+    try{
+    let response = await  axios.get(URL);
+    let{result}=response.data;  
+    setRestaurantList([...result]) 
+
+    } 
+    catch(error){
+      alert(error);
+      console.log("error");
+    }
+  };
+let goToRestaurant=(id)=>{
+  console.log(id);
+  navigate("/restaurant/"+id);
+};
+
+    return(
+<>
+    
+    <section className="row  main-section align-content-start">
+    <Header bgColor=""/>
+       <section  className="col-12 d-flex flex-column align-items-center justify-content-center"
+        >
+          <p className="brand-name fw-bold my-lg-2 mb-0">e!</p>
+          <p className="h1 text-white my-3 text-center">
+            Find the best restaurants, cafés, and bars
+          </p>
+          <div className="search w-50 d-flex mt-3">
+            <div className="d-flex flex-column position-relative ">
+            
+            <input
+              type="text"
+              className="form-control mb-3 mb-lg-0 w-50 me-lg-3 py-2 px-3 w-100"
+              placeholder="Please type a location"
+              onChange={getLocationList}
+              ref={locationRef}/>
+
+            <ul
+             className="list-group position-absolute w-100" 
+            style={{top: '100%'}}>
+              {locList.map((location)=>{
+                return(
+                <li className="list-group-item" 
+                key={location._id} 
+                onClick={() =>selectLocation(`${JSON.stringify(location)}`)}> 
+                {location.name}, {location.city}
+                </li>
+             );
+              })}
+            </ul>
+          </div>
+          <div className="d-flex flex-column me-2 position-relative w-100">
+            
+            <div className="w-100 input-group">
+              <span className="input-group-text bg-white">
+                <i className="fa fa-search text-primary"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control py-2 px-3"
+                placeholder="Search for restaurants"
+                onChange={getRestaurantDetails}
+                disabled = {restDisable}
+              /> 
+             
+              </div>
+
+              <ul className="list-group position-absolute w-100"
+               style={{top: '100%'}}>
+                 {restaurantList.map((restaurant)=>{
+              return (
+                <li className="list-group-item" 
+                key={restaurant._id} 
+                onClick={goToRestaurant(restaurant._id)}>
+                
+                <div className="rest-search-auto-complete d-flex">
+                  <img src={`/images/${restaurant.image}`} alt="" />
+                  <div className="d-flex flex-column">
+                    <p className="mb-0 fw-bold">{restaurant.name}</p>
+                    <span className="small text-muted ">{restaurant.locality},{restaurant.city}</span>
+                  </div>
+                </div>
+                </li> 
+               );
+              })}
+               </ul>
+            </div>
+          </div>
+        </section>
+      </section>
+</>
+    )
+};
+
+export default Wallpaper;

@@ -1,0 +1,17 @@
+react-router-dom
+  Important Components used in this library:
+    i) BrowserRouter ===> enable routing
+    ii)Routes ===> parent of route
+    iii)Routes ===> set path & components
+    iv)Outlet
+    V)Navigate
+    vi)Link
+
+    Hooks used here:
+    i)useParams
+     ==> to get dynamic data from uri ===> /:id
+     ==> { id: sadfghj}
+    ii)useNavigate
+
+
+    v6 Nov 2021 -- latest in trend
